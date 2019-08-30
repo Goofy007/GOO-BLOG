@@ -1,12 +1,16 @@
 class BaseModel {
-    constructor(data,messgae) {
+    constructor(data, message) {
         if (typeof data === 'string') {
-            this.messgae = data;
-            data = null;
-            message = null;
+            this.message = data
+            data = null
+            message = null
         }
-        if (data) {this.data = data}
-        if (messgae) {this.messgae = messgae}
+        if (data) {
+            this.data = data
+        }
+        if (message) {
+            this.message = message
+        }
     }
 }
 

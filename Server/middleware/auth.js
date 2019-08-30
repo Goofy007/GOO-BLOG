@@ -3,6 +3,4 @@ const { secret } = require('../config');
 
 const auth = jwt({ secret });
 
-module.exports = {
-    auth
-}
+module.exports = auth

@@ -1,5 +1,6 @@
 const User = require("../models/users");
-const auth = require("../middleware/auth");
+const jsonwebtoken = require('jsonwebtoken');
+const { secret } = require('../config');
 const graqvatar = require('gravatar');
 const { SuccessModel, ErrorModel } = require('../models/resModel')
 const {genPassword} = require("../utils/cryp")
@@ -23,6 +24,19 @@ class UserCtrl {
         const user = await newUser.save();
         console.log(user)
         ctx.body = new SuccessModel(user);
+    }
+
+    async login(ctx) {
+        const { username,password } = ctx.request.body;
+        // 查看用户是否存在
+        let result = await User.findOne({username})
+        if (!result) {return ctx.body = new ErrorModel('用户不存在')}
+        const {_id,name} = result;
+        // 密码匹配
+        if (genPassword(password) === result.password) {
+            const token = jsonwebtoken.sign({_id, name},secret,{ expiresIn: '1d' })
+            ctx.body = {token}
+        }else {return ctx.body = new ErrorModel('密码不正确')}
     }
 }
 
