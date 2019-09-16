@@ -35,7 +35,7 @@ class UserCtrl {
         // 密码匹配
         if (genPassword(password) === result.password) {
             const token = jsonwebtoken.sign({_id, name},secret,{ expiresIn: '1d' })
-            ctx.body = {token}
+            ctx.body = new SuccessModel({token:token})
         }else {return ctx.body = new ErrorModel('密码不正确')}
     }
 }

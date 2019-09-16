@@ -18,7 +18,7 @@ router.post("/delete/:id", auth, del)
 
 // 获取文章列表
 
-router.get("/", getall)
+router.get("/", auth,getall)
 
 // 获取单篇文章
 router.get("/:id", getone)

@@ -10,10 +10,12 @@ import BottomBtn from './components/BottomBtn';
 import TabList from "./components/TabList";
 import SimpleMDE from "react-simplemde-editor";
 
-axios.defaults.headers.common["Authorization"] = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDdlMGE3YjUyZWRjYTA2OGExNzhjYjIiLCJpYXQiOjE1Njg1NDEzMjksImV4cCI6MTU2ODYyNzcyOX0.bHJF1NdoQZ43EU_PV7Q9UgMhSNABfErxf9jReOxbuJA";
+const token = localStorage.getItem("user_token");
+
+axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
 
-function App() {
+function App(props) {
   const [files, setFiles] = useState([])
   const [openedFileIDs, setOpenedFileIDs] = useState([''])
   const [activeFileID, setActiveFileID] = useState('')
@@ -22,8 +24,15 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const re = await axios.get('http://localhost:3010/api/blogs');
-      setFiles(re.data.data)
+      try {
+        const re = await axios.get('http://localhost:3010/api/blogs');
+        if (re && re.data.errno === 0) {
+          setFiles(re.data.data)
+        } 
+      }
+      catch (error) {
+        props.history.push('/login')
+      }
     }
     fetchData();
   }, [])
@@ -45,7 +54,7 @@ function App() {
     let params = {}
     const newFiles = files.map(file => {
       if (file._id === id) {
-        params.author = 'xiaolizi';
+        params.author = localStorage.getItem("author");
         params.title = title;
         params.content = file.content;
         file.title = title
@@ -69,10 +78,9 @@ function App() {
     let params = {
       title: 'New Blog',
       content: 'Content...',
-      author: 'xiaolizi'
+      author: localStorage.get("author")
     }
     const re = await axios.post(`http://localhost:3010/api/blogs/add`, params)
-    console.log('new', re.data.data._id)
     // const newID = uuidv4()
     const newFiles = await [
       ...files,
@@ -87,11 +95,10 @@ function App() {
 
   const updateNewFile = async () => {
     const re = await axios.post(`http://localhost:3010/api/blogs/update/${activeFile._id}`, activeFile)
-    console.log('new', re.data.data._id)
     // const newID = uuidv4()
     const newFiles = await files.map(file => {
       if (file._id === activeFile._id) {
-        file.author ='xiaolizi';
+        file.author = localStorage.getItem("author");
         file.title = activeFile.title;
         file.content = activeFile.content;
       }
