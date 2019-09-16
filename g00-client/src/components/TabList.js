@@ -7,22 +7,23 @@ import "./TabList.scss";
 const TabList = ({ files, activeId, unsaveIds = [], onTabClick, onCloseTab }) => {
     return (
         <ul className="nav nav-pills tablist-component">
-            {
+            {files ?
                 files.map(file => {
-                    const withUnsaveMark = unsaveIds.includes(file.id);
+                    const withUnsaveMark = file ? unsaveIds.includes(file._id): null
                     const fClassName = classNames({
                         'nav-link': true,
-                        'active': file.id === activeId,
+                        'active': file? file._id === activeId: null,
                         'withUnsaved': withUnsaveMark
                     })
                     return (
-                        <li className="nav-item" key={file.id}>
+                        file ?
+                        <li className="nav-item" key={file ? file._id: null}>
                             <a
                                 href="#"
                                 className={fClassName}
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    onTabClick(file.id)
+                                    onTabClick(file._id)
                                 }}
                             >
                                 {file.title}
@@ -31,7 +32,7 @@ const TabList = ({ files, activeId, unsaveIds = [], onTabClick, onCloseTab }) =>
                                     onClick={
                                         (e) => {
                                             e.stopPropagation(); // 阻止冒泡
-                                            onCloseTab(file.id)
+                                            onCloseTab(file._id)
                                         }
                                     }
                                 >
@@ -46,9 +47,10 @@ const TabList = ({ files, activeId, unsaveIds = [], onTabClick, onCloseTab }) =>
                                     </span>
                                 }
                             </a>
-                        </li>
+                        </li>:null
                     )
                 })
+                :null
             }
         </ul>
     )

@@ -12,6 +12,7 @@ router.post('/login',login);
 
 // test auth
 router.post('/current',auth,(ctx) => {
+    console.log("OKKK")
     ctx.body = {
         msg: "CURRENT SUCCESS"
     }

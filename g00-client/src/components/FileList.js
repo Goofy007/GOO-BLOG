@@ -18,8 +18,8 @@ const FileList = ({
 
     useEffect(() => {
         if (enterPressed && editStatus) {
-            const editItem = files.find(file => file.id === editStatus)
-            onSaveEdit(editItem.id, value)
+            const editItem = files.find(file => file._id === editStatus)
+            onSaveEdit(editItem._id, value)
             setEditStatus(false)
             setValue('')
         }
@@ -45,13 +45,14 @@ const FileList = ({
     return (
         <ul className="list-group list-group-flush file-list">
             {
+                files ? 
                 files.map(file => (
                     <li
                         className="row list-group-item bg-light d-flex align-items-center file-item"
-                        key={file.id}
+                        key={file._id}
                     >
                         {
-                            (file.id !== editStatus) &&
+                            (file._id !== editStatus) &&
                             <div>
                                 <span className="col-2">
                                     <FontAwesomeIcon
@@ -63,7 +64,7 @@ const FileList = ({
                                 <span
                                     className="col-6 c-link"
                                     onClick={() => {
-                                        onFileClick(file.id)
+                                        onFileClick(file._id)
                                     }}
                                 >
                                     {file.title}
@@ -72,7 +73,7 @@ const FileList = ({
                                     type="button"
                                     className="icon-button col-1"
                                     onClick={
-                                        () => { setEditStatus(file.id); setValue(file.title) }
+                                        () => { setEditStatus(file._id); setValue(file.title) }
                                     }
                                 >
                                     <FontAwesomeIcon
@@ -84,7 +85,7 @@ const FileList = ({
                                     type="button"
                                     className="icon-button col-1"
                                     onClick={
-                                        () => { onFileDelete(file.id) }
+                                        () => { onFileDelete(file._id) }
                                     }
                                 >
                                     <FontAwesomeIcon
@@ -95,7 +96,7 @@ const FileList = ({
                             </div>
                         }
                         {
-                            (file.id === editStatus) &&
+                            (file._id === editStatus) &&
                             <div className="row">
                                 <input
                                     className="form-control col-10"
@@ -120,7 +121,7 @@ const FileList = ({
                         }
 
                     </li>
-                ))
+                )): null
             }
         </ul>
     )
